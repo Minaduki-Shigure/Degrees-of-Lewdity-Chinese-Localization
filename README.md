@@ -6,6 +6,7 @@
 ![GitHub all releases](https://img.shields.io/github/downloads/Eltirosto/Degrees-of-Lewdity-Chinese-Localization/total?link=https%3A%2F%2Fgithub.com%2FEltirosto%2FDegrees-of-Lewdity-Chinese-Localization%2Freleases%2Flatest)
 ![GitHub Repo stars](https://img.shields.io/github/stars/Eltirosto/Degrees-of-Lewdity-Chinese-Localization)
 ![GitHub issues](https://img.shields.io/github/issues-raw/Eltirosto/Degrees-of-Lewdity-Chinese-Localization)
+[![Upstream Sync](https://github.com/Minaduki-Shigure/Degrees-of-Lewdity-Chinese-Localization/actions/workflows/upstream_sync.yml/badge.svg)](https://github.com/Minaduki-Shigure/Degrees-of-Lewdity-Chinese-Localization/actions/workflows/upstream_sync.yml)
 
 汉化版 Discord 交流服务器：
 
