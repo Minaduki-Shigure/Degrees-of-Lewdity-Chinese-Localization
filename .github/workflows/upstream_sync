@@ -1,0 +1,80 @@
+name: Upstream Sync
+
+permissions:
+  contents: write
+
+on:
+  schedule:
+    - cron: "0 16 * * *" # every day
+  workflow_dispatch:
+
+jobs:
+  sync_latest_from_upstream:
+    name: Sync latest commits from upstream repo
+    runs-on: ubuntu-latest
+    if: ${{ github.event.repository.fork }}
+
+    steps:
+      # Step 1: run a standard checkout action
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check upstream changes
+        run: |
+          echo 'Checking for new commits on upstream branch.'
+          git checkout gh-pages
+          git remote add upstream https://github.com/Eltirosto/Degrees-of-Lewdity-Chinese-Localization.git
+          git fetch --quiet upstream gh-pages
+          COMMAND_STATUS=$?
+          if [ "${COMMAND_STATUS}" != 0 ]; then
+            # if shallow fetch fails, no new commits are avilable for sync
+            HAS_NEW_COMMITS=false
+            echo "has_new_commits=${HAS_NEW_COMMITS}" >> $GITHUB_OUTPUT
+            echo 'No new commits to sync. Finishing sync action gracefully.'
+          fi
+          UPSTREAM_COMMIT_HASH=$(git rev-parse "upstream/gh-pages")
+          # check is latest upstream hash is in target branch
+          git fetch --quiet origin gh-pages
+          BRANCH_WITH_LATEST="$(git branch "gh-pages" --contains="${UPSTREAM_COMMIT_HASH}")"
+          if [ -z "${UPSTREAM_COMMIT_HASH}" ]; then
+              HAS_NEW_COMMITS="error"
+          elif [ -n "${BRANCH_WITH_LATEST}" ]; then
+              HAS_NEW_COMMITS=false
+          else
+              HAS_NEW_COMMITS=true
+          fi
+          # output 'has_new_commits' value to workflow environment
+          echo "has_new_commits=${HAS_NEW_COMMITS}" >> $GITHUB_OUTPUT
+          # early exit if no new commits or something failed
+          if [ "${HAS_NEW_COMMITS}" = false ]; then
+              echo 'No new commits to sync. Finishing sync action gracefully.'
+          elif [ "${HAS_NEW_COMMITS}" = "error" ]; then
+              echo 'There was an error checking for new commits.'
+          fi
+    
+      # Step 2: run the sync action
+      - name: Sync upstream changes
+        if: steps.check.outputs.has_new_commits == 'true'
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git checkout gh-pages
+          git remote add upstream-fetch https://github.com/Eltirosto/Degrees-of-Lewdity-Chinese-Localization.git
+          git fetch upstream-fetch
+          git reset --hard upstream-fetch/gh-pages
+          git pull upstream-fetch gh-pages
+          git push --force origin gh-pages
+          
+      - name: Update manifest
+        if: steps.sync.outputs.has_new_commits == 'true'
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git checkout gh-pages
+          sed -i 's?/Degrees-of-Lewdity-Chinese-Localization/?/?g' ./manifest-normal.json
+          sed -i 's?/Degrees-of-Lewdity-Chinese-Localization/?/?g' ./manifest-polyfill.json
+          git add .
+          git commit -m "Updated manifest for vercel deployment."
+          git push
