@@ -22,6 +22,7 @@ jobs:
           fetch-depth: 0
 
       - name: Check upstream changes
+        id: check
         run: |
           echo 'Checking for new commits on upstream branch.'
           git checkout gh-pages
@@ -68,7 +69,7 @@ jobs:
           git push --force origin gh-pages
           
       - name: Update manifest
-        if: steps.sync.outputs.has_new_commits == 'true'
+        if: steps.check.outputs.has_new_commits == 'true'
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
