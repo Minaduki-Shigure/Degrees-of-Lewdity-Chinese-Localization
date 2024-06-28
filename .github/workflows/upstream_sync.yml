@@ -59,23 +59,23 @@ jobs:
       - name: Sync upstream changes
         if: steps.check.outputs.has_new_commits == 'true'
         run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
+          git config user.name "Shinonome Nano"
+          git config user.email bot@minaduki.moe
           git checkout gh-pages
           git remote add upstream-fetch https://github.com/Eltirosto/Degrees-of-Lewdity-Chinese-Localization.git
           git fetch upstream-fetch
           git reset --hard upstream-fetch/gh-pages
           git pull upstream-fetch gh-pages
-          git push --force origin gh-pages
+          # git push --force origin gh-pages
           
       - name: Update manifest
         if: steps.check.outputs.has_new_commits == 'true'
         run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
+          git config user.name "Shinonome Nano"
+          git config user.email bot@minaduki.moe
           git checkout gh-pages
           sed -i 's?/Degrees-of-Lewdity-Chinese-Localization/?/?g' ./manifest-normal.json
           sed -i 's?/Degrees-of-Lewdity-Chinese-Localization/?/?g' ./manifest-polyfill.json
           git add .
           git commit -m "Updated manifest for vercel deployment."
-          git push
+          git push --force origin gh-pages
