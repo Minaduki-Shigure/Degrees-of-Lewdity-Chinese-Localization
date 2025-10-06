@@ -9,7 +9,7 @@
   "icons": [
     {
       "purpose": "any",
-      "src": "/Degrees-of-Lewdity-Chinese-Localization/icon.png",
+      "src": "/icon.png",
       "sizes": "512x512",
       "type": "image/png"
     }
@@ -17,15 +17,15 @@
   "lang": "zh",
   "name": "Degrees of Lewdity Simplified Chinese",
   "orientation": "portrait",
-  "scope": "/Degrees-of-Lewdity-Chinese-Localization/",
+  "scope": "/",
   "short_name": "DoL-chs",
-  "start_url": "/Degrees-of-Lewdity-Chinese-Localization/",
+  "start_url": "/",
   "theme_color": "#230034",
   "screenshots": [],
   "shortcuts": [
     {
       "name": "Main",
-      "url": "/Degrees-of-Lewdity-Chinese-Localization/",
+      "url": "/",
       "description": "Main page"
     }
   ],
